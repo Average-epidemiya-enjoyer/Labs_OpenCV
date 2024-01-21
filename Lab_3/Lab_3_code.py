@@ -27,6 +27,15 @@ def add_salt_and_pepper_noise(image, salt_prob, pepper_prob):
     image_noisy[noise < d * s_vs_p] = 255
     image_noisy[np.logical_and(noise >= d * s_vs_p, noise < d)] = 0
 
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(image_noisy)
+    plt.title('Шум соль и перец')
+
+    plt.show()
     return image_noisy
 
 
@@ -40,6 +49,15 @@ def add_gaussian_noise(image, mean, var):
     else:
         gaussian_noisy_image = (image_1 + gauss).astype(np.float32)
 
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(gaussian_noisy_image)
+    plt.title('Гауссовский шум')
+
+    plt.show()
     return gaussian_noisy_image
 
 
@@ -56,14 +74,30 @@ def add_poisson_noise(image, noise_level):
         vals = len(np.unique(image_1))
         vals = 2 ** np.ceil(np.log2(vals))
         poisson_noise_image = rng.poisson(image_1 * vals * noise_level) / float(vals)
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(poisson_noise_image)
+    plt.title('Пуассоновский шум')
+
+    plt.show()
     return poisson_noise_image
 
 
 def apply_gaussian_blur(image, sigma):
     sigma = 1.0
     blurred_image = cv2.GaussianBlur(image, (0, 0), sigma)
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(blurred_image)
+    plt.title('Размытие')
+
+    plt.show()
     return blurred_image
 
 
@@ -79,13 +113,29 @@ def contraharmonic_mean_filter(image, mask, Q):
             numerator = np.sum(np.power(neighborhood, Q + 1))
             denominator = np.sum(np.power(neighborhood, Q))
             result_image[i - 1, j - 1] = numerator / denominator
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(result_image)
+    plt.title('Контргармонический фильтр')
+
+    plt.show()
     return result_image.astype(np.uint8)
 
 
 def apply_median_filter(image, ksize):
     median_filtered_image = cv2.medianBlur(image, ksize)
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(median_filtered_image)
+    plt.title('Медианный фильтр')
+
+    plt.show()
     return median_filtered_image
 
 
@@ -106,7 +156,15 @@ def apply_weighted_median_filter(image, kernel_size, weights):
             flat_weighted_window = weighted_window.flatten()
             median_value = np.median(flat_weighted_window)
             result_image[i - d, j - d] = median_value
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(result_image)
+    plt.title('Взвешенный медианный фильтр')
+
+    plt.show()
     return result_image.astype(np.uint8)
 
 
@@ -134,7 +192,15 @@ def apply_roberts_filter(image):
     cv2.normalize(b_out, b_out, 0, 1, cv2.NORM_MINMAX)
 
     result_image = cv2.merge([r_out, g_out, b_out])
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(result_image)
+    plt.title('Фильтр Робертса')
+
+    plt.show()
     return result_image
 
 
@@ -161,7 +227,15 @@ def apply_prewitt_filter(image):
     cv2.normalize(b_out, b_out, 0, 1, cv2.NORM_MINMAX)
 
     result_image = cv2.merge([r_out, g_out, b_out])
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(result_image)
+    plt.title('Фильтр Прюита')
+
+    plt.show()
     return result_image
 
 
@@ -187,7 +261,15 @@ def apply_sobel_filter(image):
     cv2.normalize(b_out, b_out, 0, 1, cv2.NORM_MINMAX)
 
     result_image = cv2.merge([r_out, g_out, b_out])
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(result_image)
+    plt.title('Фильтр Собеля')
+
+    plt.show()
     return result_image
 
 
@@ -207,52 +289,57 @@ def apply_laplacian_filter(image):
     cv2.normalize(b_out, b_out, 0, 1, cv2.NORM_MINMAX)
 
     result_image = cv2.merge([r_out, g_out, b_out])
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(result_image)
+    plt.title('Фильтр Лапласа')
+
+    plt.show()
     return result_image
 
 
 def apply_canny_filter(image, t1, t2):
     canny = cv2.Canny(image_1, t1, t2)
-    return canny
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image_1, cv2.COLOR_BGR2RGB))
+    plt.title('Оригинальное изображение')
 
+    plt.subplot(1, 2, 2)
+    plt.imshow(canny)
+    plt.title('Алгоритм Кэнни')
+
+    plt.show()
+    return canny
 
 
 image_path = "map.jpg"
 original_image = cv2.imread(image_path, cv2.IMREAD_COLOR)
+resized_image = resize_image(original_image)
 
-salt_pepper_noisy = add_salt_and_pepper_noise(original_image, salt_prob=0.01, pepper_prob=0.01)
-gaussian_noisy = add_gaussian_noise(original_image, mean=0, var=0.01)
-poisson_noisy = add_poisson_noise(original_image, noise_level=30)
+# Применяем шумы и фильтры к измененному изображению и сохраняем результаты
+salt_pepper_noisy = add_salt_and_pepper_noise(resized_image.copy(), salt_prob=0.01, pepper_prob=0.01)
+gaussian_noisy = add_gaussian_noise(resized_image.copy(), mean=0, var=0.01)
+poisson_noisy = add_poisson_noise(resized_image.copy(), noise_level=30)
 
-gaussian_blurred = apply_gaussian_blur(poisson_noisy, sigma=1.0)
-contraharmonic_filtered = contraharmonic_mean_filter(poisson_noisy, mask=np.ones((3, 3)), Q=1.5)
+# Применяем размытие и фильтры к зашумленным изображениям
+gaussian_blurred = apply_gaussian_blur(poisson_noisy.copy(), sigma=1.0)
+median_filtered = apply_median_filter(poisson_noisy.copy(), ksize=3)
+weighted_median_filtered = apply_weighted_median_filter(poisson_noisy.copy(), kernel_size=3, weights=np.ones((3, 3)) / 9)
 
-median_filtered = apply_median_filter(poisson_noisy, ksize=3)
-weights = np.array([[1, 2, 1], [2, 4, 2], [1, 2, 1]])
-weighted_median_filtered = apply_weighted_median_filter(poisson_noisy, kernel_size=3, weights=weights)
+# Применяем фильтры обнаружения краев к оригинальному изображению
+roberts_edges = apply_roberts_filter(resized_image.copy())
+prewitt_edges = apply_prewitt_filter(resized_image.copy())
+sobel_edges = apply_sobel_filter(resized_image.copy())
+laplacian_edges = apply_laplacian_filter(resized_image.copy())
+canny_edges = apply_canny_filter(resized_image.copy(), t1=100, t2=200)
 
-roberts_edges = apply_roberts_filter(original_image)
-prewitt_edges = apply_prewitt_filter(original_image)
-sobel_edges = apply_sobel_filter(original_image)
-laplacian_edges = apply_laplacian_filter(original_image)
-canny_edges = apply_canny_filter(original_image, t1=100, t2=200)
-
-
-def show_images(images, titles):
-    n = len(images)
-    plt.figure(figsize=(15, 5))
-    for i in range(n):
-        plt.subplot(1, n, i + 1)
-        plt.imshow(cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB))
-        plt.title(titles[i])
-        plt.axis('off')
-    plt.show()
-
-
-# Отображение результатов
-show_images([original_image, salt_pepper_noisy, gaussian_noisy, poisson_noisy],
-            ["Оригинальное изображение", "Шум соль и перец", "Гауссовский шум", "Пуассоновский шум"])
-show_images([gaussian_blurred, contraharmonic_filtered, median_filtered, weighted_median_filtered, ],
-            ["Размытие Гаусса", "Контргармонический фильтр", "Медианный фильтр", "Взвешенный медианный фильтр", ])
-show_images([roberts_edges, prewitt_edges, sobel_edges, laplacian_edges, canny_edges],
-            ["Фильтр Робертса", "Фильтр Прюитта", "Фильтр Собеля", "Фильтр Лапласа", "Алгоритм Кэнни"])
+# Списки оригинальных и обработанных изображений для отображения пар
+original_images = [resized_image] * 11
+processed_images = [
+    salt_pepper_noisy, gaussian_noisy, poisson_noisy,
+    gaussian_blurred, median_filtered, weighted_median_filtered,
+    roberts_edges, prewitt_edges, sobel_edges, laplacian_edges, canny_edges
+]
